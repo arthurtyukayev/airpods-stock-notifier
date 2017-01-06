@@ -27,32 +27,37 @@ while True:
             found_store = False
             for store in response_dict['body']['stores']:
                 if store['address']['address2'] == desired_store_address:
-                    if store['partsAvailability'][airpods_part_number]['pickupDisplay'] == 'available':
+                    if store['partsAvailability'][airpods_part_number]['pickupDisplay'].lower() == 'available':
                         if store['partsAvailability'][airpods_part_number][
-                            'storePickupQuote'] == 'Tomorrow at Apple Store, Roseville':
+                            'storePickupQuote'].split(" ")[0].lower() == 'tomorrow':
                             # Print message for the log.
-                            print("There is stock in the Roseville Apple Store tomorrow.")
+                            store_location = "{}, {}, {}".format(store['address']['address2'], store['city'],
+                                                                 store['address']['postalCode'])
+                            print("There is stock in the Apple Store on {} tomorrow.".format(desired_store_address))
                             # Send telegram message.
                             current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                             formatted = pformat(store['partsAvailability'][airpods_part_number])
                             product = store['partsAvailability'][airpods_part_number]['storePickupProductTitle']
-                            message = "<b>{} are in stock at the Roseville Apple Store tomorrow. Order them for pickup now.</b>" \
+                            message = "<b>{} are in stock at the Apple Store tomorrow at:\n</b> <pre>{}</pre>\n<b>Order them for pickup now.</b>" \
                                       "\nChecked at {}" \
-                                      "\n\n<code>{}</code>".format(product, current_time,
+                                      "\n\n<code>{}</code>".format(product, store_location, current_time,
                                                                    formatted.replace("<br/>", " "))
                             bot.send_message(chat_id=user_id, text=message, parse_mode='HTML')
                         elif store['partsAvailability'][airpods_part_number][
-                            'storePickupQuote'] == 'Today at Apple Store, Roseville':
+                            'storePickupQuote'].split(" ")[0].lower() == 'today':
                             # Print message for the log.
-                            print("There is stock in the Roseville Apple Store right now.")
+                            store_location = "{}, {}, {}".format(store['address']['address2'], store['city'],
+                                                                 store['address']['postalCode'])
+                            print("There is stock in the Apple Store on {} right now.".format(desired_store_address))
                             # Send telegram message.
                             current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                             formatted = pformat(store['partsAvailability'][airpods_part_number])
                             product = store['partsAvailability'][airpods_part_number]['storePickupProductTitle']
-                            message = "<b>{} are in stock at the Roseville Apple Store right now! GO TO THE APPLE STORE NOW!</b>" \
-                                      "\nChecked at {}" \
+                            message = "<b>{} are in stock at the Apple Store right now at:\n</b> <pre>{}</pre>\n<b>GO TO THE APPLE STORE NOW!</b>" \
                                       "\n" \
-                                      "\n<code>{}</code>".format(product, current_time, formatted.replace("<br/>", " "))
+                                      "\nChecked at {}" \
+                                      "\n<code>{}</code>".format(product, store_location, current_time,
+                                                                 formatted.replace("<br/>", " "))
                             bot.send_message(chat_id=user_id, text=message, parse_mode='HTML')
                     else:
                         print("Ran a check, there is no stock.")

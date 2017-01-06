@@ -23,8 +23,12 @@ while True:
             if '40' in response_dict['dataz']:
                 # Send telegram message
                 current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-                message = "<b>AirPods are in stock at the Roseville Apple Store</b>\nChecked on {}\n\n<pre>{}</pre>".format(
-                    current_time, pformat(response_dict['dataz']['40']))
+                product = 'AirPods'
+                message = "<b>{} are in stock at the Apple Store right now at:\n</b> <pre>{}</pre>\n<b>GO TO THE APPLE STORE NOW!</b>" \
+                          "\n" \
+                          "\nChecked at {}" \
+                          "\n<code>{}</code>".format(product, 'Apple Store Roseville', current_time,
+                                                     pformat(response_dict['dataz']['40']))
                 bot.send_message(chat_id=user_id, text=message, parse_mode='HTML')
             else:
                 print("Checked but nothing was found.")
