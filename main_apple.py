@@ -5,7 +5,7 @@ from datetime import datetime
 from time import sleep
 from sys import exc_info
 
-token = "167272397:AAEmTnqpauTnZ5DcnXeXM2oDodcTsqHyKBU"
+token = "321322376:AAErzsopGAH9wwkzCg3dVsBfnbmhVMctOD8"
 user_id = 51985891
 
 bot = TeleBot(token=token)
